@@ -62,5 +62,5 @@ func main() {
 
 	// Start server
 	log.Printf("Server starting on port %s", port)
-	router.Run("0.0.0.0:8080")
+	router.Run("0.0.0.0:10000")
 }
