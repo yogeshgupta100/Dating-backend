@@ -28,7 +28,7 @@ func CORSMiddleware() gin.HandlerFunc {
 				c.Header("Access-Control-Allow-Origin", origin)
 			} else {
 				log.Printf("Unrecognized origin: %s", origin)
-				c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
+				c.Header("Access-Control-Allow-Origin", "https://dating-backend-wzzl.onrender.com")
 			}
 			c.Header("Vary", "Origin")
 			c.Header("Access-Control-Allow-Credentials", "true")
