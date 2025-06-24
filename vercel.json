@@ -9,5 +9,8 @@
       "source": "/api/(.*)",
       "destination": "/api/main.go"
     }
-  ]
+  ],
+  "buildCommand": "go build -o api/main api/main.go",
+  "outputDirectory": ".",
+  "installCommand": "go mod download"
 } 

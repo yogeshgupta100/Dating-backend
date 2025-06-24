@@ -14,10 +14,15 @@ import (
 var router *gin.Engine
 
 func init() {
+	// Set Gin to release mode for production
+	gin.SetMode(gin.ReleaseMode)
+	
 	// Initialize database
 	db, err := config.InitDB()
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Printf("Failed to connect to database: %v", err)
+		// Don't fatal here for serverless - let it continue
+		return
 	}
 
 	// Initialize router
