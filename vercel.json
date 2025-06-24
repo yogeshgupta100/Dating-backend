@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/*.go": {
-      "runtime": "@vercel/go@1.0.0"
+      "runtime": "go"
     }
   },
   "rewrites": [
@@ -9,8 +9,5 @@
       "source": "/api/(.*)",
       "destination": "/api/main.go"
     }
-  ],
-  "buildCommand": "go build -o api/main api/main.go",
-  "outputDirectory": ".",
-  "installCommand": "go mod download"
+  ]
 } 
