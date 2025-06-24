@@ -2,11 +2,49 @@ package main
 
 import (
 	"log"
+	"net/http"
+	"os"
+
 	"model/config"
 	"model/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
+var router *gin.Engine
+
+func init() {
+	// Set Gin to release mode for production
+	gin.SetMode(gin.ReleaseMode)
+	
+	// Initialize database
+	db, err := config.InitDB()
+	if err != nil {
+		log.Printf("Failed to connect to database: %v", err)
+		// Don't fatal here for serverless - let it continue
+		return
+	}
+
+	// Initialize router
+	router = routes.SetupRouter(db)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	// Create a new Gin context
+	ctx := gin.CreateTestContextOnly(w, router)
+	ctx.Request = r
+
+	// Handle the request
+	router.HandleContext(ctx)
+}
+
 func main() {
+	// This is for local development
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	// Initialize database
 	db, err := config.InitDB()
 	if err != nil {
@@ -17,5 +55,6 @@ func main() {
 	router := routes.SetupRouter(db)
 
 	// Start server
-	router.Run(":8080")
+	log.Printf("Server starting on port %s", port)
+	router.Run(":" + port)
 }
