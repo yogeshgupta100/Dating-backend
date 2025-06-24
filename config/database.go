@@ -13,10 +13,7 @@ import (
 )
 
 func InitDB() (*gorm.DB, error) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file:", err)
-	}
+	_ = godotenv.Load() // Ignore error if .env is missing
 
 	dbHost := getEnv("DB_HOST", "127.0.0.1")
 	dbUser := getEnv("DB_USER", "bee36693584e")
