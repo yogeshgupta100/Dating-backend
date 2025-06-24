@@ -34,11 +34,15 @@ func (a StringArray) Value() (driver.Value, error) {
 type State struct {
 	ID          uint           `gorm:"primarykey" json:"id"`
 	Name        string         `gorm:"not null" json:"name"`
-	Slug        string         `gorm:"uniqueIndex;not null" json:"slug"`
+	Slug        string         `gorm:"type:varchar(191);uniqueIndex;not null" json:"slug"`
 	PhoneNumber string         `gorm:"not null" json:"phone_number"`
 	Heading     string         `json:"heading"`
 	SubHeading  string         `json:"sub_heading"`
 	Content     string         `json:"content"`
+	SEOTitle    string         `json:"seo_title"`
+	SEODesc     string         `json:"seo_desc"`
+	SEOKeyword  string         `json:"seo_keyword"`
+	FAQ         string         `json:"faq"`
 	Models      []Model        `gorm:"foreignKey:StateID" json:"models,omitempty"`
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`
@@ -55,6 +59,8 @@ type Model struct {
 	ProfileImg  string         `json:"profile_img"`
 	BannerImg   string         `json:"banner_img"`
 	Services    StringArray    `gorm:"type:json" json:"services"`
+	SEOTitle    string         `json:"seo_title"`
+	SEODesc     string         `json:"seo_desc"`
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`

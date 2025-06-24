@@ -21,15 +21,15 @@ func init() {
 	gin.SetMode(gin.ReleaseMode)
 
 	// Initialize database
-	db, err := config.InitDB()
-	if err != nil {
-		log.Printf("Failed to connect to database: %v", err)
-		// Don't fatal here for serverless - let it continue
-		return
-	}
+	// db, err := config.InitDB()
+	// if err != nil {
+	// 	log.Printf("Failed to connect to database: %v", err)
+	// 	// Don't fatal here for serverless - let it continue
+	// 	return
+	// }
 
 	// Initialize router
-	router = routes.SetupRouter(db)
+	// router = routes.SetupRouter(db)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {

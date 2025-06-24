@@ -19,17 +19,8 @@ func CORSMiddleware() gin.HandlerFunc {
 			origin, c.Request.Method, c.Request.URL.Path, c.Request.Header)
 
 		allowedOrigins := map[string]bool{
-			"http://54.169.115.193:5173":                 true,
-			"https://54.169.115.193:5173":                true,
-			"https://localhost:5174":                     true,
-			"https://localhost:5173":                     true,
-			"http://localhost:5173":                      true,
-			"http://localhost:5174":                      true,
-			"https://sat2.scoutassettracker.com":         true,
-			"https://b3fd-103-242-225-82.ngrok-free.app": true,
-			"https://elaborate-pie-e3f116.netlify.app":   true,
-			"https://e0ad-223-185-56-60.ngrok-free.app":  true,
-			"https://pro.abellarora.com":                 true,
+			"https://dating-backend-wzzl.onrender.com": true,
+			"https://pro.abellarora.com":               true,
 		}
 
 		setCORSHeaders := func() {
@@ -37,7 +28,7 @@ func CORSMiddleware() gin.HandlerFunc {
 				c.Header("Access-Control-Allow-Origin", origin)
 			} else {
 				log.Printf("Unrecognized origin: %s", origin)
-				c.Header("Access-Control-Allow-Origin", "http://54.169.115.193:5173")
+				c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
 			}
 			c.Header("Vary", "Origin")
 			c.Header("Access-Control-Allow-Credentials", "true")

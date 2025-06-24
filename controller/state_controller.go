@@ -107,6 +107,10 @@ func (c *StateController) UpdateState(ctx *gin.Context) {
 		Heading     string `json:"heading"`
 		SubHeading  string `json:"sub_heading"`
 		Content     string `json:"content"`
+		SEOTitle    string `json:"seo_title"`
+		SEODesc     string `json:"seo_desc"`
+		SEOKeyword  string `json:"seo_keyword"`
+		FAQ         string `json:"faq"`
 	}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -125,6 +129,10 @@ func (c *StateController) UpdateState(ctx *gin.Context) {
 	state.Heading = req.Heading
 	state.SubHeading = req.SubHeading
 	state.Content = req.Content
+	state.SEOTitle = req.SEOTitle
+	state.SEODesc = req.SEODesc
+	state.SEOKeyword = req.SEOKeyword
+	state.FAQ = req.FAQ
 
 	if err := c.stateService.UpdateState(state); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

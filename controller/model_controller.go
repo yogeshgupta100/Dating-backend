@@ -37,6 +37,8 @@ func (c *ModelController) CreateModel(ctx *gin.Context) {
 	model.Heading = ctx.PostForm("heading")
 	model.ProfileImg = ctx.PostForm("profile_img")
 	model.BannerImg = ctx.PostForm("banner_img")
+	model.SEOTitle = ctx.PostForm("seo_title")
+	model.SEODesc = ctx.PostForm("seo_desc")
 
 	// Parse services as JSON array string
 	services := ctx.PostForm("services")
@@ -114,6 +116,12 @@ func (c *ModelController) UpdateModel(ctx *gin.Context) {
 	}
 	if v := ctx.PostForm("banner_img"); v != "" {
 		model.BannerImg = v
+	}
+	if v := ctx.PostForm("seo_title"); v != "" {
+		model.SEOTitle = v
+	}
+	if v := ctx.PostForm("seo_desc"); v != "" {
+		model.SEODesc = v
 	}
 	if v := ctx.PostForm("services"); v != "" {
 		var services []string
