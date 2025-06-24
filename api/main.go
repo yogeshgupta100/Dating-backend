@@ -29,13 +29,19 @@ func init() {
 	router = routes.SetupRouter(db)
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+// Handler is the main function that Vercel will call
+func Handler(w http.ResponseWriter, r *http.Request) {
 	// Create a new Gin context
 	ctx := gin.CreateTestContextOnly(w, router)
 	ctx.Request = r
 
 	// Handle the request
 	router.HandleContext(ctx)
+}
+
+// Keep the old handler function for backward compatibility
+func handler(w http.ResponseWriter, r *http.Request) {
+	Handler(w, r)
 }
 
 func main() {
