@@ -9,14 +9,20 @@ import (
 	"model/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var router *gin.Engine
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+
 	// Set Gin to release mode for production
 	gin.SetMode(gin.ReleaseMode)
-	
+
 	// Initialize database
 	db, err := config.InitDB()
 	if err != nil {

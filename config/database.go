@@ -7,11 +7,17 @@ import (
 
 	"model/models"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func InitDB() (*gorm.DB, error) {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+
 	dbHost := getEnv("DB_HOST", "127.0.0.1")
 	dbUser := getEnv("DB_USER", "bee36693584e")
 	dbPassword := getEnv("DB_PASSWORD", "Scout@1111")
