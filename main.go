@@ -62,5 +62,5 @@ func main() {
 
 	// Start server
 	log.Printf("Server starting on port %s", port)
-	router.Run(":" + port)
+	router.Run("0.0.0.0:" + port)
 }
