@@ -1,9 +1,7 @@
 {
-  "functions": {
-    "api/main.go": {
-      "runtime": "go"
-    }
-  },
+  "buildCommand": "go build -o api/main api/main.go",
+  "outputDirectory": ".",
+  "installCommand": "go mod download",
   "rewrites": [
     {
       "source": "/api/(.*)",
