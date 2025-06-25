@@ -38,3 +38,7 @@ func (s *ModelService) UpdateModel(model *models.Model) error {
 func (s *ModelService) DeleteModel(id uint) error {
 	return s.modelRepo.Delete(id)
 }
+
+func (s *ModelService) GetModelsByHeading(heading string) ([]models.Model, error) {
+	return s.modelRepo.GetByHeading(heading)
+}

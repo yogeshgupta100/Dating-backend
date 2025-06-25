@@ -43,3 +43,9 @@ func (r *ModelRepository) Update(model *models.Model) error {
 func (r *ModelRepository) Delete(id uint) error {
 	return r.db.Delete(&models.Model{}, id).Error
 }
+
+func (r *ModelRepository) GetByHeading(heading string) ([]models.Model, error) {
+	var models []models.Model
+	err := r.db.Where("heading = ?", heading).Find(&models).Error
+	return models, err
+}

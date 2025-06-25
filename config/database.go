@@ -5,8 +5,6 @@ import (
 	"log"
 	"os"
 
-	"model/models"
-
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -31,11 +29,11 @@ func InitDB() (*gorm.DB, error) {
 	}
 
 	// Auto migrate the schema
-	err = db.AutoMigrate(&models.State{}, &models.Model{}, &models.FAQ{}, &models.GlobalPhone{})
-	if err != nil {
-		log.Printf("Failed to migrate database: %v", err)
-		return nil, err
-	}
+	// err = db.AutoMigrate(&models.State{}, &models.Model{}, &models.FAQ{}, &models.GlobalPhone{})
+	// if err != nil {
+	// 	log.Printf("Failed to migrate database: %v", err)
+	// 	return nil, err
+	// }
 
 	return db, nil
 }

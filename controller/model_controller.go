@@ -150,3 +150,24 @@ func (c *ModelController) DeleteModel(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "Model deleted successfully"})
 }
+
+func (c *ModelController) GetModelsByHeading(ctx *gin.Context) {
+	heading := ctx.Param("heading")
+	if heading == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Heading parameter is required"})
+		return
+	}
+
+	models, err := c.modelService.GetModelsByHeading(heading)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(models) == 0 {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "No models found with the specified heading"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, models)
+}

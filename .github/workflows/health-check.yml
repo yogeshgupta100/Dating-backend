@@ -1,0 +1,16 @@
+name: Health Check
+
+on:
+  schedule:
+    # Runs every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        run: |
+          curl -f https://dating-backend-wzzl.onrender.com/ping
+        continue-on-error: true 
