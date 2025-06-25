@@ -76,6 +76,14 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	router.Use(CORSMiddleware())
 
+	// Health check endpoint
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+			"status":  "healthy",
+		})
+	})
+
 	// Initialize repositories
 	stateRepo := repository.NewStateRepository(db)
 	modelRepo := repository.NewModelRepository(db)
