@@ -40,6 +40,11 @@ func (c *ModelController) CreateModel(ctx *gin.Context) {
 	model.SEOTitle = ctx.PostForm("seo_title")
 	model.SEODesc = ctx.PostForm("seo_desc")
 
+	// Generate slug from heading
+	if model.Heading != "" {
+		model.Slug = models.GenerateSlug(model.Heading)
+	}
+
 	// Parse services as JSON array string
 	services := ctx.PostForm("services")
 	if services != "" {
@@ -110,6 +115,8 @@ func (c *ModelController) UpdateModel(ctx *gin.Context) {
 	}
 	if v := ctx.PostForm("heading"); v != "" {
 		model.Heading = v
+		// Generate new slug from updated heading
+		model.Slug = models.GenerateSlug(v)
 	}
 	if v := ctx.PostForm("profile_img"); v != "" {
 		model.ProfileImg = v
@@ -166,6 +173,27 @@ func (c *ModelController) GetModelsByHeading(ctx *gin.Context) {
 
 	if len(models) == 0 {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "No models found with the specified heading"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, models)
+}
+
+func (c *ModelController) GetModelsBySlug(ctx *gin.Context) {
+	slug := ctx.Param("slug")
+	if slug == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Slug parameter is required"})
+		return
+	}
+
+	models, err := c.modelService.GetModelsBySlug(slug)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(models) == 0 {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "No models found with the specified slug"})
 		return
 	}
 

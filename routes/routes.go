@@ -117,7 +117,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	router.GET("/models/:id", modelController.GetModelByID)
 	router.PUT("/models/:id", modelController.UpdateModel)
 	router.DELETE("/models/:id", modelController.DeleteModel)
-	router.GET("/models/heading/:heading", modelController.GetModelsByHeading)
+	router.GET("/models/slug/:slug", modelController.GetModelsBySlug)
 
 	// FAQ routes
 	router.GET("/faq", faqController.GetFAQ)

@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -31,6 +32,35 @@ func (a StringArray) Value() (driver.Value, error) {
 	return json.Marshal(a)
 }
 
+// GenerateSlug converts a heading to a URL-friendly slug
+func GenerateSlug(heading string) string {
+	// Convert to lowercase
+	slug := strings.ToLower(heading)
+
+	// Replace spaces with hyphens
+	slug = strings.ReplaceAll(slug, " ", "-")
+
+	// Remove any other special characters that might cause issues
+	// Keep only alphanumeric characters and hyphens
+	var result strings.Builder
+	for _, char := range slug {
+		if (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') || char == '-' {
+			result.WriteRune(char)
+		}
+	}
+
+	// Remove multiple consecutive hyphens
+	slug = result.String()
+	for strings.Contains(slug, "--") {
+		slug = strings.ReplaceAll(slug, "--", "-")
+	}
+
+	// Remove leading and trailing hyphens
+	slug = strings.Trim(slug, "-")
+
+	return slug
+}
+
 type State struct {
 	ID          uint           `gorm:"primarykey" json:"id"`
 	Name        string         `gorm:"not null" json:"name"`
@@ -56,6 +86,7 @@ type Model struct {
 	Description string         `json:"description"`
 	Name        string         `json:"name"`
 	Heading     string         `json:"heading"`
+	Slug        string         `gorm:"type:varchar(191);uniqueIndex" json:"slug"`
 	ProfileImg  string         `json:"profile_img"`
 	BannerImg   string         `json:"banner_img"`
 	Services    StringArray    `gorm:"type:json" json:"services"`

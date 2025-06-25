@@ -49,3 +49,9 @@ func (r *ModelRepository) GetByHeading(heading string) ([]models.Model, error) {
 	err := r.db.Where("heading = ?", heading).Find(&models).Error
 	return models, err
 }
+
+func (r *ModelRepository) GetBySlug(slug string) ([]models.Model, error) {
+	var models []models.Model
+	err := r.db.Where("slug = ?", slug).Find(&models).Error
+	return models, err
+}
