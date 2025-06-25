@@ -20,8 +20,8 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		allowedOrigins := map[string]bool{
 			"http://localhost:5174":                    true,
-			"http://localhost:5173":                    true,
-			"https://localhost:5173":                   true,
+			"http://localhost:3000":                    true,
+			"https://localhost:3000":                   true,
 			"https://localhost:5174":                   true,
 			"https://dating-backend-wzzl.onrender.com": true,
 			"https://pro.abellarora.com":               true,
@@ -32,7 +32,7 @@ func CORSMiddleware() gin.HandlerFunc {
 				c.Header("Access-Control-Allow-Origin", origin)
 			} else {
 				log.Printf("Unrecognized origin: %s", origin)
-				c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
+				c.Header("Access-Control-Allow-Origin", "http://localhost:3000")
 			}
 			c.Header("Vary", "Origin")
 			c.Header("Access-Control-Allow-Credentials", "true")
