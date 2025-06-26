@@ -24,6 +24,7 @@ func CORSMiddleware() gin.HandlerFunc {
 			"https://localhost:3000":                   true,
 			"https://localhost:5174":                   true,
 			"https://dating-backend-wzzl.onrender.com": true,
+			"https://dating-frontend-coral.vercel.app": true,
 			"https://pro.abellarora.com":               true,
 		}
 
