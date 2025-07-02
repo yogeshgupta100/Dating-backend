@@ -19,14 +19,14 @@ func CORSMiddleware() gin.HandlerFunc {
 			origin, c.Request.Method, c.Request.URL.Path, c.Request.Header)
 
 		allowedOrigins := map[string]bool{
-			"http://localhost:5174":                    true,
-			"http://localhost:3000":                    true,
-			"https://localhost:3000":                   true,
-			"https://localhost:5174":                   true,
-			"https://dating-backend-wzzl.onrender.com": true,
-			"https://next-dating-app-pi.vercel.app":    true,
-			"https://www.pokkoo.in":                    true,
-			"https://pokkoo.in":                        true,
+			"http://localhost:5174":  true,
+			"http://localhost:3000":  true,
+			"https://localhost:3000": true,
+			"https://localhost:5174": true,
+			"http://localhost:8080":  true,
+			"https://localhost:8080": true,
+			"https://www.pokkoo.in":  true,
+			"https://pokkoo.in":      true,
 		}
 
 		setCORSHeaders := func() {
@@ -34,7 +34,7 @@ func CORSMiddleware() gin.HandlerFunc {
 				c.Header("Access-Control-Allow-Origin", origin)
 			} else {
 				log.Printf("Unrecognized origin: %s", origin)
-				c.Header("Access-Control-Allow-Origin", "http://localhost:3000s")
+				c.Header("Access-Control-Allow-Origin", "http://localhost:3000")
 			}
 			c.Header("Vary", "Origin")
 			c.Header("Access-Control-Allow-Credentials", "true")
