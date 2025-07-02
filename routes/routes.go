@@ -24,8 +24,9 @@ func CORSMiddleware() gin.HandlerFunc {
 			"https://localhost:3000":                   true,
 			"https://localhost:5174":                   true,
 			"https://dating-backend-wzzl.onrender.com": true,
-			"https://next-dating-app-pi.vercel.app": 	true,
-			"https://pro.abellarora.com":               true,
+			"https://next-dating-app-pi.vercel.app":    true,
+			"https://www.pokkoo.in":                    true,
+			"https://pokkoo.in":                        true,
 		}
 
 		setCORSHeaders := func() {
