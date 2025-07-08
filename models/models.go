@@ -82,6 +82,7 @@ type State struct {
 type Model struct {
 	ID          uint           `gorm:"primarykey" json:"id"`
 	StateID     uint           `gorm:"not null" json:"state_id"`
+	State       State          `gorm:"foreignKey:StateID;constraint:OnDelete:CASCADE" json:"state,omitempty"`
 	PhoneNumber string         `gorm:"not null" json:"phone_number"`
 	Description string         `json:"description"`
 	Name        string         `json:"name"`

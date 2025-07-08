@@ -55,3 +55,13 @@ func (r *StateRepository) Update(state *models.State) error {
 func (r *StateRepository) Delete(id uint) error {
 	return r.db.Delete(&models.State{}, id).Error
 }
+
+func (r *StateRepository) DeleteModelsByStateID(stateID uint) error {
+	return r.db.Where("state_id = ?", stateID).Delete(&models.Model{}).Error
+}
+
+func (r *StateRepository) CountModelsByStateID(stateID uint) (int64, error) {
+	var count int64
+	err := r.db.Model(&models.Model{}).Where("state_id = ?", stateID).Count(&count).Error
+	return count, err
+}

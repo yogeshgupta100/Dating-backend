@@ -55,3 +55,13 @@ func (r *ModelRepository) GetBySlug(slug string) ([]models.Model, error) {
 	err := r.db.Where("slug = ?", slug).Find(&models).Error
 	return models, err
 }
+
+func (r *ModelRepository) DeleteByStateID(stateID uint) error {
+	return r.db.Where("state_id = ?", stateID).Delete(&models.Model{}).Error
+}
+
+func (r *ModelRepository) CountByStateID(stateID uint) (int64, error) {
+	var count int64
+	err := r.db.Model(&models.Model{}).Where("state_id = ?", stateID).Count(&count).Error
+	return count, err
+}
