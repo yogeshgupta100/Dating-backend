@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -31,14 +32,32 @@ func (c *ModelController) CreateModel(ctx *gin.Context) {
 		id, _ := strconv.ParseUint(stateIDStr, 10, 32)
 		model.StateID = uint(id)
 	}
-	model.PhoneNumber = ctx.PostForm("phone_number")
-	model.Description = ctx.PostForm("description")
-	model.Name = ctx.PostForm("name")
-	model.Heading = ctx.PostForm("heading")
-	model.ProfileImg = ctx.PostForm("profile_img")
-	model.BannerImg = ctx.PostForm("banner_img")
-	model.SEOTitle = ctx.PostForm("seo_title")
-	model.SEODesc = ctx.PostForm("seo_desc")
+
+	// Use GetPostForm to handle empty strings properly
+	if _, exists := ctx.GetPostForm("phone_number"); exists {
+		model.PhoneNumber = ctx.PostForm("phone_number")
+	}
+	if _, exists := ctx.GetPostForm("description"); exists {
+		model.Description = ctx.PostForm("description")
+	}
+	if _, exists := ctx.GetPostForm("name"); exists {
+		model.Name = ctx.PostForm("name")
+	}
+	if _, exists := ctx.GetPostForm("heading"); exists {
+		model.Heading = ctx.PostForm("heading")
+	}
+	if _, exists := ctx.GetPostForm("profile_img"); exists {
+		model.ProfileImg = ctx.PostForm("profile_img")
+	}
+	if _, exists := ctx.GetPostForm("banner_img"); exists {
+		model.BannerImg = ctx.PostForm("banner_img")
+	}
+	if _, exists := ctx.GetPostForm("seo_title"); exists {
+		model.SEOTitle = ctx.PostForm("seo_title")
+	}
+	if _, exists := ctx.GetPostForm("seo_desc"); exists {
+		model.SEODesc = ctx.PostForm("seo_desc")
+	}
 
 	// Generate slug from heading
 	if model.Heading != "" {
@@ -104,32 +123,52 @@ func (c *ModelController) UpdateModel(ctx *gin.Context) {
 			model.StateID = uint(sid)
 		}
 	}
-	if v := ctx.PostForm("phone_number"); v != "" {
-		model.PhoneNumber = v
+
+	// Check if phone_number is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("phone_number"); exists {
+		phoneNumber := ctx.PostForm("phone_number")
+		log.Printf("Updating phone_number for model %d: '%s' (exists: %v)", id, phoneNumber, exists)
+		model.PhoneNumber = phoneNumber
+	} else {
+		log.Printf("phone_number field not present in form data for model %d", id)
 	}
-	if v := ctx.PostForm("description"); v != "" {
-		model.Description = v
+
+	// Check if description is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("description"); exists {
+		model.Description = ctx.PostForm("description")
 	}
-	if v := ctx.PostForm("name"); v != "" {
-		model.Name = v
+
+	// Check if name is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("name"); exists {
+		model.Name = ctx.PostForm("name")
 	}
+
 	if v := ctx.PostForm("heading"); v != "" {
 		model.Heading = v
 		// Generate new slug from updated heading
 		model.Slug = models.GenerateSlug(v)
 	}
-	if v := ctx.PostForm("profile_img"); v != "" {
-		model.ProfileImg = v
+
+	// Check if profile_img is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("profile_img"); exists {
+		model.ProfileImg = ctx.PostForm("profile_img")
 	}
-	if v := ctx.PostForm("banner_img"); v != "" {
-		model.BannerImg = v
+
+	// Check if banner_img is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("banner_img"); exists {
+		model.BannerImg = ctx.PostForm("banner_img")
 	}
-	if v := ctx.PostForm("seo_title"); v != "" {
-		model.SEOTitle = v
+
+	// Check if seo_title is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("seo_title"); exists {
+		model.SEOTitle = ctx.PostForm("seo_title")
 	}
-	if v := ctx.PostForm("seo_desc"); v != "" {
-		model.SEODesc = v
+
+	// Check if seo_desc is present in form data (even if empty)
+	if _, exists := ctx.GetPostForm("seo_desc"); exists {
+		model.SEODesc = ctx.PostForm("seo_desc")
 	}
+
 	if v := ctx.PostForm("services"); v != "" {
 		var services []string
 		if err := json.Unmarshal([]byte(v), &services); err == nil {
