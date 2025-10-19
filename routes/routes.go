@@ -14,12 +14,12 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
 		allowedOrigins := map[string]bool{
-			"http://localhost:5174":  true,
-			"http://localhost:3000":  true,
-			"https://localhost:3000": true,
-			"https://localhost:5174": true,
-			"https://hi.xyz.in":      true,
-			"https://www.hi.xyz.in":  true,
+			"http://localhost:5174":    true,
+			"http://localhost:3000":    true,
+			"https://localhost:3000":   true,
+			"https://localhost:5174":   true,
+			"https://hi.pokkoo.in":     true,
+			"https://www.hi.pokkoo.in": true,
 		}
 
 		// Set CORS headers
