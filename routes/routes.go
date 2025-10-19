@@ -38,6 +38,9 @@ func CORSMiddleware() gin.HandlerFunc {
 		// Only set the origin header if it's allowed
 		if allow {
 			c.Header("Access-Control-Allow-Origin", origin)
+		} else if origin != "" {
+			// Temporary: Allow any origin for testing (remove in production)
+			c.Header("Access-Control-Allow-Origin", origin)
 		}
 
 		// Handle preflight requests
