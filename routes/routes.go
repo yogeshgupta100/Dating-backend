@@ -4,8 +4,6 @@ import (
 	"model/controller"
 	"model/repository"
 	"model/service"
-
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,59 +13,29 @@ import (
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		log.Printf("Request - Origin: %s, Method: %s, Path: %s, Headers: %v",
-			origin, c.Request.Method, c.Request.URL.Path, c.Request.Header)
-
 		allowedOrigins := map[string]bool{
 			"http://localhost:5174":  true,
 			"http://localhost:3000":  true,
 			"https://localhost:3000": true,
 			"https://localhost:5174": true,
-			"http://localhost:8080":  true,
-			"https://localhost:8080": true,
-			"https://www.pokkoo.in":  true,
-			"https://pokkoo.in":      true,
+			"https://hi.xyz.in":      true,
+			"https://www.hi.xyz.in":  true,
 		}
 
-		setCORSHeaders := func() {
-			if allowedOrigins[origin] {
-				c.Header("Access-Control-Allow-Origin", origin)
-			} else {
-				log.Printf("Unrecognized origin: %s", origin)
-				c.Header("Access-Control-Allow-Origin", "http://localhost:3000")
-			}
-			c.Header("Vary", "Origin")
-			c.Header("Access-Control-Allow-Credentials", "true")
-			c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, ngrok-skip-browser-warning, access-control-allow-headers, access-control-allow-methods, access-control-allow-origin")
-			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			log.Printf("CORS Headers: %v", c.Writer.Header())
+		// Set CORS headers
+		if allowedOrigins[origin] {
+			c.Header("Access-Control-Allow-Origin", origin)
 		}
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Header("Vary", "Origin")
 
-		setCORSHeaders()
-
-		if c.Writer.Header().Get("Access-Control-Allow-Origin") == "" {
-			log.Printf("CORS headers missing, reapplying - Path: %s, Status: %d", c.Request.URL.Path, c.Writer.Status())
-			setCORSHeaders()
-		}
-
-		if c.Request.Method == http.MethodOptions {
-			log.Printf("Handling OPTIONS preflight for %s", c.Request.URL.Path)
-			c.Header("Cache-Control", "no-store, no-cache, must-revalidate")
-			c.Header("Access-Control-Max-Age", "86400")
-			setCORSHeaders()
+		// Handle preflight requests
+		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
 			return
 		}
-
-		defer func() {
-			setCORSHeaders()
-			if c.Writer.Status() >= 300 {
-				log.Printf("Special response (redirect/error) - Path: %s, Method: %s, Status: %d, Headers: %v",
-					c.Request.URL.Path, c.Request.Method, c.Writer.Status(), c.Writer.Header())
-			}
-			log.Printf("Response - Path: %s, Method: %s, Status: %d, Headers: %v",
-				c.Request.URL.Path, c.Request.Method, c.Writer.Status(), c.Writer.Header())
-		}()
 
 		c.Next()
 	}
@@ -120,6 +88,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	router.PUT("/models/:id", modelController.UpdateModel)
 	router.DELETE("/models/:id", modelController.DeleteModel)
 	router.GET("/models/slug/:slug", modelController.GetModelsBySlug)
+	router.GET("/debug/models", modelController.DebugModels)
 
 	// FAQ routes
 	router.GET("/faq", faqController.GetFAQ)
