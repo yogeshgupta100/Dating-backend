@@ -5,6 +5,7 @@ import (
 	"model/repository"
 	"model/service"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -19,10 +20,9 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
 
-		// Check if the origin is allowed
 		allow := false
 		for _, o := range allowedOrigins {
-			if o == origin {
+			if origin != "" && (origin == o || strings.HasPrefix(origin, o)) {
 				allow = true
 				break
 			}
@@ -31,12 +31,11 @@ func CORSMiddleware() gin.HandlerFunc {
 		if allow {
 			c.Header("Access-Control-Allow-Origin", origin)
 			c.Header("Access-Control-Allow-Credentials", "true")
-			c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
+			c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With, ngrok-skip-browser-warning")
 			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 			c.Header("Vary", "Origin")
 		}
 
-		// Preflight request
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
 			return
