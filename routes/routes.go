@@ -11,27 +11,32 @@ import (
 )
 
 func CORSMiddleware() gin.HandlerFunc {
+	allowedOrigins := []string{
+		"https://hi.pokkoo.in",
+		"https://www.hi.pokkoo.in",
+	}
+
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		allowedOrigins := map[string]bool{
-			"http://localhost:5174":    true,
-			"http://localhost:3000":    true,
-			"https://localhost:3000":   true,
-			"https://localhost:5174":   true,
-			"https://hi.pokkoo.in":     true,
-			"https://www.hi.pokkoo.in": true,
+
+		// Check if the origin is allowed
+		allow := false
+		for _, o := range allowedOrigins {
+			if o == origin {
+				allow = true
+				break
+			}
 		}
 
-		// Set CORS headers
-		if allowedOrigins[origin] {
+		if allow {
 			c.Header("Access-Control-Allow-Origin", origin)
+			c.Header("Access-Control-Allow-Credentials", "true")
+			c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
+			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			c.Header("Vary", "Origin")
 		}
-		c.Header("Access-Control-Allow-Credentials", "true")
-		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
-		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Header("Vary", "Origin")
 
-		// Handle preflight requests
+		// Preflight request
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
 			return
