@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"log"
 	"model/models"
 
 	"gorm.io/gorm"
@@ -54,15 +53,6 @@ func (r *ModelRepository) GetByHeading(heading string) ([]models.Model, error) {
 func (r *ModelRepository) GetBySlug(slug string) ([]models.Model, error) {
 	var models []models.Model
 	err := r.db.Where("slug = ?", slug).Find(&models).Error
-	if err != nil {
-		log.Printf("Repository: Error getting models by slug '%s': %v", slug, err)
-	} else {
-		log.Printf("Repository: Found %d models for slug '%s'", len(models), slug)
-		for i, model := range models {
-			log.Printf("Repository: Model %d - ID: %d, PhoneNumber: '%s', StateID: %d",
-				i, model.ID, model.PhoneNumber, model.StateID)
-		}
-	}
 	return models, err
 }
 

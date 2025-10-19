@@ -54,6 +54,32 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		})
 	})
 
+	// Additional health check with database
+	router.GET("/health", func(c *gin.Context) {
+		// Test database connection
+		sqlDB, err := db.DB()
+		if err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{
+				"status": "unhealthy",
+				"error":  "database connection failed",
+			})
+			return
+		}
+
+		if err := sqlDB.Ping(); err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{
+				"status": "unhealthy",
+				"error":  "database ping failed",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "healthy",
+			"database": "connected",
+		})
+	})
+
 	// Initialize repositories
 	stateRepo := repository.NewStateRepository(db)
 	modelRepo := repository.NewModelRepository(db)
@@ -88,7 +114,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	router.PUT("/models/:id", modelController.UpdateModel)
 	router.DELETE("/models/:id", modelController.DeleteModel)
 	router.GET("/models/slug/:slug", modelController.GetModelsBySlug)
-	router.GET("/debug/models", modelController.DebugModels)
 
 	// FAQ routes
 	router.GET("/faq", faqController.GetFAQ)

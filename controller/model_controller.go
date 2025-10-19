@@ -225,19 +225,10 @@ func (c *ModelController) GetModelsBySlug(ctx *gin.Context) {
 		return
 	}
 
-	log.Printf("GetModelsBySlug: Searching for slug: '%s'", slug)
-
 	models, err := c.modelService.GetModelsBySlug(slug)
 	if err != nil {
-		log.Printf("GetModelsBySlug: Error getting models for slug '%s': %v", slug, err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
-	}
-
-	log.Printf("GetModelsBySlug: Found %d models for slug '%s'", len(models), slug)
-	for i, model := range models {
-		log.Printf("GetModelsBySlug: Model %d - ID: %d, PhoneNumber: '%s', StateID: %d",
-			i, model.ID, model.PhoneNumber, model.StateID)
 	}
 
 	if len(models) == 0 {
@@ -246,27 +237,4 @@ func (c *ModelController) GetModelsBySlug(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, models)
-}
-
-// Debug endpoint to check database state
-func (c *ModelController) DebugModels(ctx *gin.Context) {
-	log.Printf("DebugModels: Checking all models in database")
-
-	models, err := c.modelService.GetAllModels()
-	if err != nil {
-		log.Printf("DebugModels: Error getting all models: %v", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	log.Printf("DebugModels: Found %d total models", len(models))
-	for i, model := range models {
-		log.Printf("DebugModels: Model %d - ID: %d, Slug: '%s', PhoneNumber: '%s', StateID: %d",
-			i, model.ID, model.Slug, model.PhoneNumber, model.StateID)
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"total_models": len(models),
-		"models":       models,
-	})
 }

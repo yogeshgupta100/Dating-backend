@@ -20,7 +20,7 @@ func InitDB() (*gorm.DB, error) {
 	dbName := getEnv("DB_NAME", "state_model")
 	dbPort := getEnv("DB_PORT", "3306")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&timeout=30s&readTimeout=30s&writeTimeout=30s",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -28,6 +28,18 @@ func InitDB() (*gorm.DB, error) {
 		log.Printf("Failed to connect to database: %v", err)
 		return nil, err
 	}
+
+	// Configure connection pool
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Printf("Failed to get underlying sql.DB: %v", err)
+		return nil, err
+	}
+
+	// Set connection pool settings
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(0)
 
 	// Auto migrate the schema
 	err = db.AutoMigrate(&models.State{}, &models.Model{}, &models.FAQ{}, &models.GlobalPhone{})
